@@ -62,7 +62,7 @@ if __name__ == "__main__":
         proxies=None
     )
 
-    name_dictionary = "combined.dic"
+    name_dictionary = "namelist.dic"
 
     scrape_all(api, conn, c, name_dictionary)
     conn.close()
