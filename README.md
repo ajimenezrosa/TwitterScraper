@@ -1,13 +1,14 @@
 # TwitterScraper
-This bot can be used to search Twitter for email addresses and phone numbers left in users' bios. The results are stored in a SQLite database. 
+This bot can be used to search Twitter for email addresses and phone numbers left in users' bios. The results are stored in a SQLite database.
 
 ## Usage
 ```
 [joe@centos TwitterScraper]$ ./twitter-scraper.py --help
 usage: twitter-scraper.py [-h] -d DICTIONARY [-q] [--socks5 SOCKS5]
 
-TwitterScraper searches Twitter for profiles and scrapes any email addresses
-and phone numbers left in a user's bio.
+TwitterScraper searches Twitter for user profiles and scrapes any email
+addresses and phone numbers in their bios. The username and any emails or
+phone numbers are stored in the SQLite database 'TwitterScraper/users.db'
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -20,7 +21,7 @@ required arguments:
                         search queries
 
 ```
-The program requires a dictionary file for the search terms. This can be any file with a each search term on its own line. I have provided an ordered list of over 20,000 first names in the namelist.dic file.
+The program requires a dictionary file for the search terms. This can be any file with each search term on its own line. I have provided an ordered list of over 20,000 first names in the namelist.dic file.
 
 You may also specify a SOCKS5 proxy to use. For example, with Tor:
 ```

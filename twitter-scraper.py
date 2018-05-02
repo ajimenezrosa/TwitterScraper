@@ -45,7 +45,7 @@ def scrape_all(api, conn, c, args):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="TwitterScraper searches Twitter for profiles and scrapes any email addresses and phone numbers left in a user's bio.")
+    parser = argparse.ArgumentParser(description="TwitterScraper searches Twitter for user profiles and scrapes any email addresses and phone numbers in their bios. The username and any emails or phone numbers are stored in the SQLite database 'TwitterScraper/users.db'")
     requiredArgs = parser.add_argument_group('required arguments')
     requiredArgs.add_argument("-d", "--dictionary", required=True, help="Specify path to a dictionary file to be used for the search queries")
     parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode minimises console output")
