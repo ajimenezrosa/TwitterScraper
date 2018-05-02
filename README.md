@@ -34,16 +34,16 @@ Next you will need to input the keys into the source code.
 ```
 vim twitter-scraper.py
 ```
-```
+<pre>
 ...
-<pre><b>
+<b>
 CONSUMER_KEY = "your consumer key"
 CONSUMER_SECRET = "your consumer secret"
 ACCESS_TOKEN_KEY = "your access key"
 ACCESS_TOKEN_SECRET = "your access secret"
-</b></pre>
+</b>
 ...
-```
+</pre>
 If you haven't already, install the dependencies.
 ```
 sudo pip3 install -r requirements.txt
