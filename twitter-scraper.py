@@ -1,5 +1,7 @@
+#!/usr/bin/python3.6
 import sqlite3
 import twitter
+import argparse
 import re, os, sys
 
 CONSUMER_KEY = ""
@@ -7,7 +9,9 @@ CONSUMER_SECRET = ""
 ACCESS_TOKEN_KEY = ""
 ACCESS_TOKEN_SECRET = ""
 
-def scrape_all(api, conn, c, name_dictionary):
+def scrape_all(api, conn, c, args):
+
+    name_dictionary = args.dictionary
 
     def check_for_credentials(users):
         for user in users:
@@ -33,12 +37,30 @@ def scrape_all(api, conn, c, name_dictionary):
 
     with open(name_dictionary, 'r') as names:
         for name in names:
-            print("Searching with {}".format(name))
+            if not args.quiet:
+                print("[*] Searching with {}".format(name))
             users = api.GetUsersSearch(term=name)
             check_for_credentials(users)
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="TwitterScraper searches Twitter for profiles and scrapes any email addresses and phone numbers left in a user's bio.")
+    requiredArgs = parser.add_argument_group('required arguments')
+    requiredArgs.add_argument("-d", "--dictionary", required=True, help="Specify path to a dictionary file to be used for the search queries")
+    parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode minimises console output")
+    parser.add_argument("--socks5", help="Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050")
+
+    args = parser.parse_args()
+
+    proxy_dict = None
+    if args.socks5:
+        proxy = "socks5://{}".format(args.socks5)
+        proxy_dict = {
+            'http': proxy,
+            'https': proxy
+        }
+
     if "users.db" not in os.listdir():
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
@@ -59,10 +81,10 @@ if __name__ == "__main__":
         access_token_key=ACCESS_TOKEN_KEY,
         access_token_secret=ACCESS_TOKEN_SECRET,
         sleep_on_rate_limit=True,
-        proxies=None
+        proxies=proxy_dict
     )
 
-    name_dictionary = "namelist.dic"
 
-    scrape_all(api, conn, c, name_dictionary)
+    scrape_all(api, conn, c, args)
     conn.close()
+    print("[*] Results stored in TwitterScraper/users.db")
