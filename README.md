@@ -36,12 +36,10 @@ vim twitter-scraper.py
 ```
 <pre>
 ...
-<b>
-CONSUMER_KEY = "your consumer key"
-CONSUMER_SECRET = "your consumer secret"
-ACCESS_TOKEN_KEY = "your access key"
-ACCESS_TOKEN_SECRET = "your access secret"
-</b>
+CONSUMER_KEY = "<b>your consumer key</b>"
+CONSUMER_SECRET = "<b>your consumer secret</b>"
+ACCESS_TOKEN_KEY = "<b>your access key</b>"
+ACCESS_TOKEN_SECRET = "<b>your access secret</b>"
 ...
 </pre>
 If you haven't already, install the dependencies.
