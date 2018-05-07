@@ -4,7 +4,8 @@ This bot can be used to search Twitter for email addresses and phone numbers lef
 ## Usage
 ```
 [joe@centos TwitterScraper]$ ./twitter-scraper.py --help
-usage: twitter-scraper.py [-h] -d DICTIONARY [-q] [--socks5 SOCKS5]
+usage: twitter-scraper.py [-h] -d DICTIONARY [-q] [--verified]
+                          [--socks5 SOCKS5]
 
 TwitterScraper searches Twitter for user profiles and scrapes any email
 addresses and phone numbers in their bios. The username and any emails or
