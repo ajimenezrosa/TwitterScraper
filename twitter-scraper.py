@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 import sqlite3
 import twitter
 import argparse
@@ -14,7 +14,7 @@ def scrape_all(api, conn, c, args):
     name_dictionary = args.dictionary
 
     def check_for_credentials(users):
-        for user in users:
+        def check():
             c.execute("SELECT COUNT(*) FROM users WHERE username=?", (user.screen_name,))
             occurences = c.fetchone()[0]
             if not occurences:
@@ -34,6 +34,13 @@ def scrape_all(api, conn, c, args):
                     c.execute("UPDATE users SET phone=? WHERE username=?", (str(phones), user.screen_name))
                     conn.commit()
 
+        for user in users:
+            if args.verified:
+                if user.verified:
+                    check()
+            else:
+                check()
+
 
     with open(name_dictionary, 'r') as names:
         for name in names:
@@ -49,6 +56,7 @@ if __name__ == "__main__":
     requiredArgs = parser.add_argument_group('required arguments')
     requiredArgs.add_argument("-d", "--dictionary", required=True, help="Specify path to a dictionary file to be used for the search queries")
     parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode minimises console output")
+    parser.add_argument("--verified", action="store_true", help="Only select Verified accounts")
     parser.add_argument("--socks5", help="Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050")
 
     args = parser.parse_args()
@@ -83,7 +91,6 @@ if __name__ == "__main__":
         sleep_on_rate_limit=True,
         proxies=proxy_dict
     )
-
 
     scrape_all(api, conn, c, args)
     conn.close()

@@ -13,6 +13,7 @@ phone numbers are stored in the SQLite database 'TwitterScraper/users.db'
 optional arguments:
   -h, --help            show this help message and exit
   -q, --quiet           Quiet mode minimises console output
+  --verified            Only select verified accounts
   --socks5 SOCKS5       Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050
 
 required arguments:
