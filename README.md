@@ -1,10 +1,11 @@
 # TwitterScraper
-This bot can be used to search Twitter for email addresses and phone numbers left in users' bios. The results are stored in a SQLite database.
+This bot can be used to scrape Twitter for email addresses and phone numbers associated with user accounts. Additionally, it can use AI to build profiles about those users' personalities including their values and needs. The results are stored in a SQLite database.
 
 ## Usage
 ```
 [joe@centos TwitterScraper]$ ./twitter-scraper.py --help
-usage: twitter-scraper.py [-h] -d DICTIONARY [-q] [--socks5 SOCKS5]
+usage: twitter-scraper.py [-h] -d DICTIONARY [-a] [-q] [--verified]
+                          [--socks5 SOCKS5]
 
 TwitterScraper searches Twitter for user profiles and scrapes any email
 addresses and phone numbers in their bios. The username and any emails or
@@ -12,8 +13,10 @@ phone numbers are stored in the SQLite database 'TwitterScraper/users.db'
 
 optional arguments:
   -h, --help            show this help message and exit
+  -a, --analyse         Build personality profiles of the users based on their
+                        last 200 tweets
   -q, --quiet           Quiet mode minimises console output
-  --verified            Only select verified accounts
+  --verified            Only select Verified accounts
   --socks5 SOCKS5       Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050
 
 required arguments:
@@ -52,3 +55,16 @@ Then run the script, specifying a dictionary file to use.
 ```
 python3 twitter-scraper.py -d namelist.dic
 ```
+
+## Optional: using IBM Watson API
+
+You can use the Watson Personality Insights API to build profiles about the users. You will need a [Bluemix](https://bluemix.net) account. After creating an account, create a new resource from your dashboard and select the Personality Insights from the Watson platform. Once you've created the new service, get your API credentials and add them to the source.
+```
+vim twitter-scraper.py
+```
+<pre>
+...
+USERNAME = "<b>username</b>"
+PASSWORD = "<b>password</b>"
+...
+</pre>
