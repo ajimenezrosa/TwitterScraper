@@ -57,7 +57,7 @@ Then run the script, specifying a dictionary file to use.
 python3 twitter-scraper.py -d namelist.dic
 ```
 
-## Optional: using IBM Watson API
+## Optional: IBM Watson API
 
 You can use the Watson Personality Insights API to build profiles about the users. You will need a [Bluemix](https://bluemix.net) account. After creating an account, create a new resource from your dashboard and select the Personality Insights from the Watson platform. Once you've created the new service, get your API credentials and add them to the source.
 ```

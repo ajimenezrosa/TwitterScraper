@@ -12,7 +12,7 @@ CONSUMER_SECRET = ""
 ACCESS_TOKEN_KEY = ""
 ACCESS_TOKEN_SECRET = ""
 
-#IBM Watson API (PersonalityInsights)
+# IBM Watson API (PersonalityInsights)
 USERNAME = ""
 PASSWORD = ""
 
@@ -32,14 +32,17 @@ def scrape_all(api, conn, c, args):
         return user_personality
 
     def check_geolocations(username):
-        locations = []
-        statuses = api.GetUserTimeline(screen_name=username)
-        for s in statuses:
-            if s.place:
-                coordinates = s.place['bounding_box']['coordinates']
-                locations.append(coordinates)
+        try:
+            locations = []
+            statuses = api.GetUserTimeline(screen_name=username)
+            for s in statuses:
+                if s.place:
+                    coordinates = s.place['bounding_box']['coordinates']
+                    locations.append(coordinates)
 
-        return locations
+            return locations
+        except twitter.error.TwitterError:
+            return None
 
     def check_for_credentials(users):
         def check():
