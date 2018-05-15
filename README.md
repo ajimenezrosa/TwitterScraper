@@ -33,7 +33,7 @@ You may also specify a SOCKS5 proxy to use. For example, with Tor:
 ```
 ## Getting started
 
-To access the Twitter API, you will need to obtain API keys for the account you want to use. Head over to the [Twitter developers](https://developer.twitter.com/) site and get your access token key & secret and a consumer key & secret.
+To access the Twitter API, you will need to obtain API keys for the account you want to use. Head over to the [Twitter API](https://apps.twitter.com/) site and create an app.
 
 Next you will need to input the keys into the source code.
 ```
