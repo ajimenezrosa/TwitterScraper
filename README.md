@@ -1,11 +1,11 @@
 # TwitterScraper
-This bot can be used to scrape Twitter for email addresses and phone numbers associated with user accounts. Additionally, it can use AI to build profiles about those users' personalities including their values and needs. The results are stored in a SQLite database.
+This bot can be used to scrape Twitter for email addresses, geolocations and phone numbers associated with user accounts. Additionally, it can use AI to build profiles about those users' personalities including their values and needs. The results are stored in a SQLite database.
 
 ## Usage
 ```
 [joe@centos TwitterScraper]$ ./twitter-scraper.py --help
-usage: twitter-scraper.py [-h] -d DICTIONARY [-a] [-q] [--verified]
-                          [--socks5 SOCKS5]
+usage: twitter-scraper.py [-h] -d DICTIONARY [-a] [-q] [--geolocations]
+                          [--verified] [--socks5 SOCKS5]
 
 TwitterScraper searches Twitter for user profiles and scrapes any email
 addresses and phone numbers in their bios. The username and any emails or
@@ -16,6 +16,7 @@ optional arguments:
   -a, --analyse         Build personality profiles of the users based on their
                         last 200 tweets
   -q, --quiet           Quiet mode minimises console output
+  --geolocations        Scrape geolocations from the user's tweets
   --verified            Only select Verified accounts
   --socks5 SOCKS5       Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050
 

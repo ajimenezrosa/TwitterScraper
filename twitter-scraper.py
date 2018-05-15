@@ -31,6 +31,16 @@ def scrape_all(api, conn, c, args):
 
         return user_personality
 
+    def check_geolocations(username):
+        locations = []
+        statuses = api.GetUserTimeline(screen_name=username)
+        for s in statuses:
+            if s.place:
+                coordinates = s.place['bounding_box']['coordinates']
+                locations.append(coordinates)
+
+        return locations
+
     def check_for_credentials(users):
         def check():
             c.execute("SELECT COUNT(*) FROM users WHERE username=?", (user.screen_name,))
@@ -41,14 +51,6 @@ def scrape_all(api, conn, c, args):
                 if emails or phones:
                     c.execute("INSERT INTO users ('username') VALUES (?)", (user.screen_name,))
                     conn.commit()
-                    if args.analyse:
-                        print("[*] Building profile for @{}... ".format(user.screen_name), end="")
-                        sys.stdout.flush()
-                        profile = analyse(user.screen_name)
-                        print("\033[92mDONE\033[0m")
-                        c.execute("INSERT INTO users ('personality') VALUES (?)", (str(profile),))
-                        conn.commit()
-                        quit()
                 if emails:
                     for email in emails:
                         print("[\033[92mFOUND\033[0m] Email for @{}: {}".format(user.screen_name, email))
@@ -59,6 +61,20 @@ def scrape_all(api, conn, c, args):
                         print("[\033[92mFOUND\033[0m] Phone for @{}: {}".format(user.screen_name, phone))
                     c.execute("UPDATE users SET phone=? WHERE username=?", (str(phones), user.screen_name))
                     conn.commit()
+                if emails or phones:
+                    if args.analyse:
+                        print("[*] Building profile for @{}... ".format(user.screen_name), end="")
+                        sys.stdout.flush()
+                        profile = analyse(user.screen_name)
+                        print("\033[92mDONE\033[0m")
+                        c.execute("INSERT INTO users ('personality') VALUES (?)", (str(profile),))
+                        conn.commit()
+                    if args.geolocations:
+                        locations = check_geolocations(user.screen_name)
+                        if locations:
+                            print("[\033[92mFOUND\033[0m] Geolocations for @{}".format(user.screen_name))
+                            c.execute("INSERT INTO users ('locations') VALUES (?)", (str(locations),))
+                            conn.commit()
 
         for user in users:
             if args.verified:
@@ -83,6 +99,7 @@ if __name__ == "__main__":
     requiredArgs.add_argument("-d", "--dictionary", required=True, help="Specify path to a dictionary file to be used for the search queries")
     parser.add_argument("-a", "--analyse", action="store_true", help="Build personality profiles of the users based on their last 200 tweets")
     parser.add_argument("-q", "--quiet", action="store_true", help="Quiet mode minimises console output")
+    parser.add_argument("--geolocations", action="store_true", help="Scrape geolocations from the user's tweets")
     parser.add_argument("--verified", action="store_true", help="Only select Verified accounts")
     parser.add_argument("--socks5", help="Use a SOCKS5 proxy e.g. --socks5 127.0.0.1:9050")
 
@@ -104,6 +121,7 @@ if __name__ == "__main__":
                 username text,
                 email text,
                 phone text,
+                locations text,
                 personality text
             )
         """)
