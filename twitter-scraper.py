@@ -49,8 +49,9 @@ def scrape_all(api, conn, c, args):
             c.execute("SELECT COUNT(*) FROM users WHERE username=?", (user.screen_name,))
             occurences = c.fetchone()[0]
             if not occurences:
-                emails = re.findall(r'[\w\.-]+@[\w\.-]+', user.description)
-                phones = re.findall("[(][\d]{3}[)][ ]?[\d]{3}-[\d]{4}", user.description)
+                emails = re.findall(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', user.description)
+                phones = re.findall(r'(?:(?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(?:0\d|\(?:[0-9]{3}\)|[1-9]{0,3})(?:(?:(?: |\-)[0-9]{2}){4}|(?:(?:[0-9]{2}){4})|(?:(?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|(?:[0-9]{7}))', user.description)
+
                 if emails or phones:
                     c.execute("INSERT INTO users ('username') VALUES (?)", (user.screen_name,))
                     conn.commit()
