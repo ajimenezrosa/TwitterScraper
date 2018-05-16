@@ -18,7 +18,7 @@ def index(request):
         'stat4': 'Locations',
         'count4': Users.objects.exclude(locations__isnull=True).count(),
         'users': users,
-        'cols': [f.name for f in Users._meta.get_fields()][:-1]
+        'cols': [f.name for f in Users._meta.get_fields()][:-2]
     }
 
     return render(request, 'browse/index.html', context)

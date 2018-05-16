@@ -69,3 +69,8 @@ USERNAME = "<b>username</b>"
 PASSWORD = "<b>password</b>"
 ...
 </pre>
+
+## Running the webapp:
+```
+python3 webapp.py
+```
