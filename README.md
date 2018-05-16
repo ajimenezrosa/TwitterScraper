@@ -70,7 +70,9 @@ PASSWORD = "<b>password</b>"
 ...
 </pre>
 
-## Running the webapp:
+## Running the web app
+
+To use the web app interface with the db, use the launcher script webapp.py
 ```
 python3 webapp.py
 ```
