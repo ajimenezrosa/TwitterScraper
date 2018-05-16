@@ -1,0 +1,26 @@
+{% extends 'browse/layout.html' %}
+
+{% block content %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      {% for col in cols %}
+        <th scope="col">{{col}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+      <a href="test">
+        <tr>
+          <th scope="row">{{user.username}}</th>
+          <td>{{ user.email|default:"" }}</td>
+          <td>{{ user.phone|default:"" }}</td>
+          <td>{{user.locations|default:""}}</td>
+          <td>{{user.personality|default:""}}</td>
+        </tr>
+      </a>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

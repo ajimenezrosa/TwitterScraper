@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'browse/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'browse/css/offcanvas.css' %}" />
+    <title>Browse</title>
+  </head>
+
+  <body class="bg-light">
+
+    {% include 'browse/navbar.html' %}
+
+    <main role="main" class="container">
+
+      <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow container">
+        <div class="lh-100 col-3">
+          <h6 class="mb-0 text-white lh-100">{{ stat1 }}</h6>
+          <small>{{ count1 }}</small>
+        </div>
+        <div class="lh-100 col-3">
+          <h6 class="mb-0 text-white lh-100">{{ stat2 }}</h6>
+          <small>{{ count2 }}</small>
+        </div>
+        <div class="lh-100 col-3">
+          <h6 class="mb-0 text-white lh-100">{{ stat3 }}</h6>
+          <small>{{ count3 }}</small>
+        </div>
+        <div class="lh-100 col-3">
+          <h6 class="mb-0 text-white lh-100">{{ stat4 }}</h6>
+          <small>{{ count4 }}</small>
+        </div>
+      </div>
+
+      <div class="rounded bg-white">
+        {% block content %}
+        {% endblock %}
+      </div>
+
+    </main>
+
+    <script src="{% static 'browse/js/jquery.min.js' %}"></script>
+    <script src="{% static 'browse/js/popper.min.js' %}"></script>
+    <script src="{% static 'browse/js/bootstrap.min.js' %}"></script>
+
+  </body>
+
+</html>

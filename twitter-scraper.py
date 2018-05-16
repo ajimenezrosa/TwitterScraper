@@ -12,7 +12,7 @@ CONSUMER_SECRET = ""
 ACCESS_TOKEN_KEY = ""
 ACCESS_TOKEN_SECRET = ""
 
-#IBM Watson API (PersonalityInsights)
+# IBM Watson API (PersonalityInsights)
 USERNAME = ""
 PASSWORD = ""
 
@@ -32,34 +32,48 @@ def scrape_all(api, conn, c, args):
         return user_personality
 
     def check_geolocations(username):
-        locations = []
-        statuses = api.GetUserTimeline(screen_name=username)
-        for s in statuses:
-            if s.place:
-                coordinates = s.place['bounding_box']['coordinates']
-                locations.append(coordinates)
+        try:
+            locations = []
+            statuses = api.GetUserTimeline(screen_name=username)
+            for s in statuses:
+                if s.place:
+                    coordinates = s.place['bounding_box']['coordinates']
+                    locations.append(coordinates)
 
-        return locations
+            return locations
+        except twitter.error.TwitterError:
+            return None
 
     def check_for_credentials(users):
         def check():
             c.execute("SELECT COUNT(*) FROM users WHERE username=?", (user.screen_name,))
             occurences = c.fetchone()[0]
             if not occurences:
-                emails = re.findall(r'[\w\.-]+@[\w\.-]+', user.description)
-                phones = re.findall("[(][\d]{3}[)][ ]?[\d]{3}-[\d]{4}", user.description)
+                emails = re.findall(r'[\w\.-]+@[\w\.-]+\.[\w\.-]+$', user.description)
+                phones = re.findall(r'(?:(?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(?:0\d|\(?:[0-9]{3}\)|[1-9]{0,3})(?:(?:(?: |\-)[0-9]{2}){4}|(?:(?:[0-9]{2}){4})|(?:(?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|(?:[0-9]{7}))', user.description)
+
                 if emails or phones:
                     c.execute("INSERT INTO users ('username') VALUES (?)", (user.screen_name,))
                     conn.commit()
                 if emails:
-                    for email in emails:
+                    email_entry = ""
+                    for index, email in enumerate(emails):
                         print("[\033[92mFOUND\033[0m] Email for @{}: {}".format(user.screen_name, email))
-                    c.execute("UPDATE users SET email=? WHERE username=?", (str(emails), user.screen_name))
+                        if (len(emails) > 1) and (index > 0):
+                            email_entry += ",{}".format(email)
+                        else:
+                            email_entry = email
+                    c.execute("UPDATE users SET email=? WHERE username=?", (email_entry, user.screen_name))
                     conn.commit()
                 if phones:
-                    for phone in phones:
+                    phone_entry = ""
+                    for index, phone in enumerate(phones):
                         print("[\033[92mFOUND\033[0m] Phone for @{}: {}".format(user.screen_name, phone))
-                    c.execute("UPDATE users SET phone=? WHERE username=?", (str(phones), user.screen_name))
+                        if (len(phones) > 1) and (index > 0):
+                            phone_entry += ",{}".format(phone)
+                        else:
+                            phone_entry = phone
+                    c.execute("UPDATE users SET phone=? WHERE username=?", (phone_entry, user.screen_name))
                     conn.commit()
                 if emails or phones:
                     if args.analyse:
@@ -67,13 +81,13 @@ def scrape_all(api, conn, c, args):
                         sys.stdout.flush()
                         profile = analyse(user.screen_name)
                         print("\033[92mDONE\033[0m")
-                        c.execute("INSERT INTO users ('personality') VALUES (?)", (str(profile),))
+                        c.execute("UPDATE users SET personality=? WHERE username=?", (str(profile), user.screen_name))
                         conn.commit()
                     if args.geolocations:
                         locations = check_geolocations(user.screen_name)
                         if locations:
                             print("[\033[92mFOUND\033[0m] Geolocations for @{}".format(user.screen_name))
-                            c.execute("INSERT INTO users ('locations') VALUES (?)", (str(locations),))
+                            c.execute("UPDATE users SET locations=? WHERE username=?", (str(locations), user.screen_name))
                             conn.commit()
 
         for user in users:
@@ -88,8 +102,11 @@ def scrape_all(api, conn, c, args):
         for name in names:
             if not args.quiet:
                 print("[*] Searching with {}".format(name))
-            users = api.GetUsersSearch(term=name)
-            check_for_credentials(users)
+            try:
+                users = api.GetUsersSearch(term=name)
+                check_for_credentials(users)
+            except twitter.error.TwitterError:
+                pass
 
 
 if __name__ == "__main__":
